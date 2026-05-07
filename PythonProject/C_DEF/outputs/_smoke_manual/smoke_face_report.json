@@ -1,0 +1,70 @@
+{
+  "image_path": "outputs\\_smoke\\smoke_face.png",
+  "ai_probability": 0.39438294703155025,
+  "real_probability": 0.6056170529684497,
+  "label": "疑似真实拍摄",
+  "confidence": 0.2112341059368995,
+  "model_mode": "physics-heuristic",
+  "face_found": true,
+  "face_box": [
+    80,
+    40,
+    210,
+    240
+  ],
+  "face_note": "使用手动框选的人脸区域",
+  "branch_scores": [
+    {
+      "name": "物理噪声分支",
+      "real_evidence": 0.47849269837803976,
+      "ai_evidence": 0.5215073016219602,
+      "note": "传感器噪声、CFA 周期、局部噪声-亮度关系"
+    },
+    {
+      "name": "频域残差分支",
+      "real_evidence": 1.0,
+      "ai_evidence": 0.0,
+      "note": "FFT 高频比例、谱斜率、方向性、JPEG 块效应"
+    },
+    {
+      "name": "RGB 语义分支",
+      "real_evidence": 0.7313943326271186,
+      "ai_evidence": 0.2686056673728814,
+      "note": "清晰度、边缘密度、饱和度、纹理能量"
+    }
+  ],
+  "features": {
+    "residual_std": 9.880430221557617,
+    "residual_abs_mean": 2.80336594581604,
+    "residual_entropy": 1.5499336216185435,
+    "residual_kurtosis": 19.257321762808463,
+    "noise_illum_corr": -0.7113388380281522,
+    "cfa_periodicity": 0.023915513108174007,
+    "channel_noise_corr": 0.9877986796109327,
+    "fft_low_ratio": 0.7433382932173012,
+    "fft_mid_ratio": 0.21595818444735326,
+    "fft_high_ratio": 0.04070352233534569,
+    "spectral_slope": -3.1120332575058005,
+    "directional_anisotropy": 0.04606865052651878,
+    "jpeg_blockiness": 0.0,
+    "laplacian_var": 7804.3359375,
+    "edge_density": 0.03302001953125,
+    "saturation_mean": 0.24451829493045807,
+    "saturation_std": 0.08833914995193481,
+    "color_channel_corr": 0.8937817737760771,
+    "smooth_area_ratio": 0.62890625,
+    "texture_energy": 0.09299507737159729,
+    "exif_camera_score": 0.0
+  },
+  "evidence": [
+    "未发现训练权重，当前结果来自物理启发式初始模型。",
+    "已启用手动人脸框，后续特征均来自用户划定区域。",
+    "人脸定位成功，分析区域为最大人脸 ROI。",
+    "物理噪声分支: 真实成像证据 47.8%，传感器噪声、CFA 周期、局部噪声-亮度关系。",
+    "频域残差分支: 真实成像证据 100.0%，FFT 高频比例、谱斜率、方向性、JPEG 块效应。",
+    "RGB 语义分支: 真实成像证据 73.1%，清晰度、边缘密度、饱和度、纹理能量。",
+    "未读取到相机 EXIF 元数据；这不是 AI 证据，但会降低真实设备来源的辅助证据。",
+    "RGB 通道残差相关性偏高，独立传感器噪声特征不足。"
+  ],
+  "exif": {}
+}
