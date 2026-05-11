@@ -6,18 +6,25 @@ models/*.pkl
 models/*.pt
 models/*.pth
 data/
+
+# 训练数据 — 不入库
+database/data1/real_and_fake_face/
+database/data2/140k_real_vs_fake/
 database/data*/real/*
 database/data*/fake/*
 !database/data*/.gitkeep
 !database/data*/real/.gitkeep
 !database/data*/fake/.gitkeep
+
+# 方案一中间产物 — 保留 .npy 和 .json，排除其他
 fusion_lr/models/*
-!fusion_lr/models/.gitkeep
-deep_cnn/models/*
-!deep_cnn/models/.gitkeep
-cross_gen_test/real/*
-cross_gen_test/stylegan3/*
-cross_gen_test/sdxl/*
-cross_gen_test/midjourney/*
-cross_gen_test/dalle3/*
-!cross_gen_test/*/.gitkeep
+!fusion_lr/models/*.npy
+!fusion_lr/models/*.json
+
+# 方案三模型权重 — 不入库
+deep_cnn/models/*.pt
+deep_cnn/models/*.pth
+deep_cnn/models/*.joblib
+
+# 跨生成器测试集 — 已弃用，不入库
+cross_gen_test/
