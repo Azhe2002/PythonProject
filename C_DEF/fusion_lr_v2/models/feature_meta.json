@@ -1,0 +1,33 @@
+{
+  "columns": [
+    "residual_std",
+    "residual_abs_mean",
+    "residual_entropy",
+    "residual_kurtosis",
+    "noise_illum_corr",
+    "cfa_periodicity",
+    "channel_noise_corr",
+    "fft_low_ratio",
+    "fft_mid_ratio",
+    "fft_high_ratio",
+    "spectral_slope",
+    "directional_anisotropy",
+    "jpeg_blockiness",
+    "laplacian_var",
+    "edge_density",
+    "saturation_mean",
+    "saturation_std",
+    "color_channel_corr",
+    "smooth_area_ratio",
+    "texture_energy",
+    "exif_camera_score",
+    "branch_physical",
+    "branch_frequency",
+    "branch_rgb",
+    "branch_smoothness",
+    "smoothness_ai_risk",
+    "rgb_real_score",
+    "exif_camera_raw"
+  ],
+  "n_raw_features": 21
+}

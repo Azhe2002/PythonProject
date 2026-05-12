@@ -1,0 +1,30 @@
+{
+    "datasets": {
+        "data2": {
+            "real_dir": "database/data2/140k_real_vs_fake/real_vs_fake/real-vs-fake/train/real",
+            "fake_dir": "database/data2/140k_real_vs_fake/real_vs_fake/real-vs-fake/train/fake",
+            "valid_real_dir": "database/data2/140k_real_vs_fake/real_vs_fake/real-vs-fake/valid/real",
+            "valid_fake_dir": "database/data2/140k_real_vs_fake/real_vs_fake/real-vs-fake/valid/fake",
+            "test_real_dir": "database/data2/140k_real_vs_fake/real_vs_fake/real-vs-fake/test/real",
+            "test_fake_dir": "database/data2/140k_real_vs_fake/real_vs_fake/real-vs-fake/test/fake"
+        }
+    },
+    "training": {
+        "cv_folds": 5,
+        "random_state": 42,
+        "C_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
+        "xgb_params": {
+            "max_depth": [3, 5, 7],
+            "learning_rate": [0.01, 0.1, 0.3],
+            "n_estimators": 200,
+            "subsample": 0.8,
+            "colsample_bytree": 0.8
+        }
+    },
+    "manual_weights": {
+        "physical": 0.46,
+        "frequency": 0.32,
+        "rgb": 0.10,
+        "smoothness": 0.12
+    }
+}

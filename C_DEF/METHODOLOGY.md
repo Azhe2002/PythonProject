@@ -303,37 +303,53 @@ cross_gen_test/               │   最终评估阶段（不参与训练）
                               ──► deep_cnn/evaluate.py
 ```
 
-### 结果对比框架
+### 方案一 v1：四分支逻辑回归融合 (`fusion_lr/`)
 
-#### 训练数据集上
+| 数据集 | 指标 | 手工基线 | 方案一 v1 (4分支LR) |
+|---|---|---|---|
+| data1 | AUC | 0.5036 | 0.5409 |
+| data1 | F1 | 0.0062 | 0.3087 |
+| data1 | ECE | 0.1256 | 0.0085 |
+| data2 | AUC | 0.5561 | 0.5713 |
+| data2 | F1 | 0.0000 | 0.5706 |
+| data2 | ECE | 0.1805 | 0.0018 |
 
-| 数据集 | 指标 | 手工基线 | 方案一 (LR) | 方案三 (CNN) |
-|---|---|---|---|---|
-| data1 | AUC | ? | ? | ? |
-| data1 | F1 | ? | ? | ? |
-| data1 | ECE | ? | ? | ? |
-| data2 | AUC | ? | ? | ? |
-| data2 | F1 | ? | ? | ? |
-| data2 | ECE | ? | ? | ? |
-| data3 | AUC | ? | ? | ? |
-| data3 | F1 | ? | ? | ? |
-| data3 | ECE | ? | ? | ? |
+**结论**：四分支特征表达力不足，方案一 v1 上限 AUC≈0.57。
+
+### 方案一 v2：跳过分支聚合 (`fusion_lr_v2/`)
+
+2026-05-12 新增。直接使用 21 维原始特征，对比三种建模方法。
+
+| 方法 | 特征 | 模型 | AUC | F1 | Acc | ECE |
+|---|---|---|---|---|---|---|
+| 手工基线 | 4分支 | 硬编码规则 | 0.5561 | 0.0000 | 0.5000 | 0.1805 |
+| lr_21dim | 21维原始 | LR(CV选C) | 0.6382 | 0.6104 | 0.5992 | 0.0105 |
+| lr_hybrid | 21维+6维物理 | LR(CV选C) | 0.6420 | 0.6118 | 0.6018 | 0.0115 |
+| **xgb_21dim** | **21维原始** | **XGBoost** | **0.7324** | **0.6681** | **0.6691** | 0.0149 |
+
+**关键发现**：
+1. 分支聚合是信息瓶颈 — 跳过它 AUC 从 0.556→0.638
+2. 手工物理特征收益可忽略 — lr_hybrid 仅比 lr_21dim 高 0.004
+3. 非线性是关键 — XGBoost AUC=0.732，为方案一框架下最优
+4. 两个模型依赖不同的特征子集（LR 偏纹理，XGBoost 偏频域/噪声）
 
 #### 跨生成器泛化（data2 训练模型 → 各生成器）
 
-| 测试生成器 | 指标 | 手工基线 | 方案一 (LR) | 方案三 (CNN) |
-|---|---|---|---|---|
-| StyleGAN3 | AUC | ? | ? | ? |
-| SDXL | AUC | ? | ? | ? |
-| Midjourney | AUC | ? | ? | ? |
-| DALL-E 3 | AUC | ? | ? | ? |
+| 测试生成器 | 指标 | 手工基线 | 方案一 v1 | 方案一 v2 (XGB) | 方案三 (CNN) |
+|---|---|---|---|---|---|
+| StyleGAN3 | AUC | ? | ? | ? | ? |
+| SDXL | AUC | ? | ? | ? | ? |
+| Midjourney | AUC | ? | ? | ? | ? |
+| DALL-E 3 | AUC | ? | ? | ? | ? |
 
 #### 跨范式泛化（data3 训练模型 → GAN 生成器）
 
-| 测试生成器 | 指标 | 手工基线 | 方案一 (LR) | 方案三 (CNN) |
-|---|---|---|---|---|
-| StyleGAN2 | AUC | ? | ? | ? |
-| StyleGAN3 | AUC | ? | ? | ? |
+| 测试生成器 | 指标 | 手工基线 | 方案一 v1 | 方案一 v2 (XGB) | 方案三 (CNN) |
+|---|---|---|---|---|---|
+| StyleGAN2 | AUC | ? | ? | ? | ? |
+| StyleGAN3 | AUC | ? | ? | ? | ? |
+
+注：cross_gen_test/ 已弃用，跨生成器评估待后续恢复。
 
 ---
 
@@ -349,13 +365,22 @@ cross_gen_test/               │   最终评估阶段（不参与训练）
 
 ---
 
+## 当前进度 (2026-05-12)
+
+| # | 行动项 | 状态 |
+|---|---|---|
+| 1 | 下载 data1 (Kaggle Real and Fake Face) | ✅ 完成 |
+| 2 | 下载 data2 (140k Real and Fake Faces) | ✅ 完成 |
+| 3 | 下载 data3 (CelebA + SD Face) | ⏳ 未开始 |
+| 4 | 方案一 v1：4分支LR融合验证 | ✅ 完成 (AUC≤0.57) |
+| 5 | 方案一 v2：21维直连 + XGBoost | ✅ 完成 (AUC=0.732) |
+| 6 | cross_gen_test 跨生成器集 | ❌ 已弃用 |
+| 7 | 方案三：deep_cnn 端到端训练 | ⏳ 下一步 |
+| 8 | 汇总对比报告 | ⏳ 待方案三完成后 |
+
 ## 下一步行动
 
-1. 从 Kaggle 获取 data1（Real and Fake Face Detection）和 data2（140k Real and Fake Faces），放入 `database/data1/` 和 `database/data2/`
-2. 从 CelebA 官网 / HuggingFace 下载 unaligned 版真实人脸，从 HuggingFace/Kaggle 获取 SD Face Dataset，放入 `database/data3/`
-3. 收集跨生成器测试集（StyleGAN3、SDXL、Midjourney、DALL-E3），放入 `cross_gen_test/`
-4. 运行 `ai_face_detector` 对三个数据集做手工权重基线评测，填入对比矩阵
-5. 实现 `fusion_lr/` 下的特征提取和逻辑回归训练
-6. 实现 `deep_cnn/` 下的 CNN 训练 pipeline
-7. 跨生成器泛化评估
-8. 汇总对比报告
+1. 实现 `deep_cnn/dataset.py` + `train.py` — 端到端 LightweightMultiBranchNet 训练
+2. 利用 torch 2.9.1+CUDA 在 data2 100K 训练集上训练
+3. 与方案一 v2 XGBoost 基线 (AUC=0.732) 对比
+4. 视结果决定是否需要 data3 跨范式验证
